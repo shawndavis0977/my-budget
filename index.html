@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>My Budget Snowball</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>My Budget Snowball <span class="badge" id="installBadge">PWA</span></h1>
+  <nav>
+    <button data-tab="run" class="active">Run</button>
+    <button data-tab="bills">Bills</button>
+    <button data-tab="debts">Debts</button>
+    <button data-tab="settings">Settings</button>
+    <button data-tab="log">Log</button>
+  </nav>
+</header>
+
+<main>
+  <section id="tab-run" class="tab">
+    <div class="card">
+      <div class="row">
+        <div class="field">
+          <label>Pay amount (this payday)</label>
+          <input id="payAmount" type="number" step="0.01" inputmode="decimal" placeholder="e.g., 2500">
+        </div>
+        <div class="field">
+          <label>Pay cycle length (days)</label>
+          <select id="cycleDays">
+            <option value="14" selected>14 (bi-weekly)</option>
+            <option value="7">7 (weekly)</option>
+            <option value="15">15</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Run date</label>
+          <input id="runDate" type="date">
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btnRun">Calculate plan</button>
+        <button class="secondary" id="btnSaveRun">Save to log</button>
+      </div>
+      <p class="note" id="runHint"></p>
+    </div>
+
+    <div class="card" id="resultsCard" style="display:none">
+      <div class="kpi" id="kpis"></div>
+      <hr>
+      <div id="planTables"></div>
+      <p class="note" id="warnings"></p>
+    </div>
+  </section>
+
+  <section id="tab-bills" class="tab" style="display:none">
+    <div class="card">
+      <p class="note">Bills are included if they are due between the run date and the next payday. Monthly bills use due-day-of-month; biweekly bills are included every run.</p>
+      <div class="actions">
+        <button id="btnAddBill">Add bill</button>
+        <button class="secondary" id="btnResetBills">Reset to your list</button>
+      </div>
+    </div>
+    <div class="card">
+      <table id="billsTable"></table>
+    </div>
+  </section>
+
+  <section id="tab-debts" class="tab" style="display:none">
+    <div class="card">
+      <p class="note">Snowball order is smallest balance first. Minimums are protected; all extra goes to the target.</p>
+      <div class="actions">
+        <button id="btnAddDebt">Add card</button>
+        <button class="secondary" id="btnResetDebts">Reset to your cards</button>
+      </div>
+    </div>
+    <div class="card">
+      <table id="debtsTable"></table>
+    </div>
+  </section>
+
+  <section id="tab-settings" class="tab" style="display:none">
+    <div class="card">
+      <div class="row">
+        <div class="field">
+          <label>Groceries per payday</label>
+          <input id="groceries" type="number" step="0.01" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Safety buffer</label>
+          <input id="buffer" type="number" step="0.01" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Extra money rule (large lump sum split)</label>
+          <select id="lumpRule">
+            <option value="100" selected>100% to snowball (default)</option>
+            <option value="80">80% snowball / 20% buffer (for big lump sums)</option>
+            <option value="90">90% snowball / 10% treat</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btnSaveSettings">Save settings</button>
+        <button class="secondary" id="btnExport">Export data</button>
+        <button class="secondary" id="btnImport">Import data</button>
+      </div>
+      <small id="dataStatus"></small>
+      <p class="note">Tip: Add this to your Home Screen in Safari (Share → Add to Home Screen) to use it like an app.</p>
+    </div>
+  </section>
+
+  <section id="tab-log" class="tab" style="display:none">
+    <div class="card">
+      <div class="actions">
+        <button class="secondary" id="btnClearLog">Clear log</button>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <table id="logTable"></table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

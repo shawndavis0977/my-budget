@@ -1,0 +1,21 @@
+{
+  "name": "My Budget Snowball",
+  "short_name": "MyBudget",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0b2e1d",
+  "theme_color": "#147846",
+  "description": "Payday budgeting with bills-by-date, groceries, and debt snowball.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
