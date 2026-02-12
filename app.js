@@ -154,19 +154,30 @@ function computeSnowballPlan(state, payAmount, runDate, cycleDays){
   const extra = Math.max(0, availableForDebt - minsTotal);
 
   const allocations = debts.map(d=>({name:d.name, balance:clampNonNeg(d.balance), min:clampNonNeg(d.min), pay: clampNonNeg(d.min)}));
-  if(allocations.length){
-    allocations[0].pay += extra;
-    // Cap payments and roll excess down the list
-    let remaining = availableForDebt - allocations.reduce((s,a)=> s + a.pay, 0);
-    // remaining should be ~0; but if capping occurs, distribute
-    for(let i=0;i<allocations.length && remaining>0.01;i++){
-      const room = allocations[i].balance - allocations[i].pay;
-      if(room > 0.01){
-        const add = Math.min(room, remaining);
-        allocations[i].pay += add;
-        remaining -= add;
-      }
+  if (allocations.length) {
+  // Put all extra onto the smallest balance card first
+  allocations[0].pay += extra;
+
+  // HARD CAP: never pay more than the balance; roll leftover to next debts
+  let carry = 0;
+  for (let i = 0; i < allocations.length; i++) {
+    allocations[i].pay += carry;
+    carry = 0;
+
+    const bal = allocations[i].balance;
+    if (allocations[i].pay > bal) {
+      carry = allocations[i].pay - bal;
+      allocations[i].pay = bal;
     }
+  }
+
+  if (carry > 0.01) {
+    issues.push({
+      type: "ok",
+      msg: `All listed debts would be paid off with ${money(carry)} left over.`
+    });
+  }
+}
     if(remaining>0.01){
       issues.push({type:"ok", msg:`All listed debts would be paid off with ${money(remaining)} left over.`});
     }
